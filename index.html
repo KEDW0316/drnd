@@ -179,20 +179,35 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         .modal-overlay.active {
             display: flex;
         }
+        /* 두 팝업을 좌우로 나란히 담을 컨테이너 */
+        .modal-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 24px;
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+            max-width: 1280px;
+            flex-wrap: wrap;
+        }
         .modal-content {
             background: white;
             border-radius: 15px;
+            flex: 1 1 0;
+            min-width: 320px;
             max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             position: relative;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             animation: modalFadeIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
         @keyframes modalFadeIn {
             from {
@@ -244,6 +259,15 @@
             .about-text { padding-right: 0; margin-bottom: 40px; text-align: center;}
             header { padding: 0 20px; }
             .nav-links { display: none; } /* 모바일에서는 메뉴 숨김 (간소화) */
+
+            /* 모바일에서는 팝업을 위아래로 쌓기 */
+            .modal-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .modal-content {
+                max-height: 70vh;
+            }
         }
     </style>
 </head>
@@ -322,34 +346,65 @@
         </div>
     </footer>
 
-    <!-- 팝업 모달 -->
+    <!-- 팝업 모달 (1차 + 2차 공고 좌우 배치) -->
     <div id="popupModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">해산 및 채권신고공고(2차)</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="margin-bottom: 20px; line-height: 1.8; color: #333;">
-                    본 회사는 2025년 12월 08일 임시주주총회에서 해산을 결의하였으므로 당 회사의 해산에 대하여 이의가 있으신 분이나 채권이 있으신 분은 본 공고 게재 익일로부터 2개월 이내에 그 채권액을 신고하여 주시기 바랍니다. 만약 위 기간내에 신고가 없으면 청산에서 제외됨을 공고합니다.
-                </p>
-                <div style="margin-top: 40px; text-align: right;">
-                    <p style="margin-bottom: 10px; font-weight: 600;">2025년 12월 18일</p>
-                    <p style="margin-bottom: 5px; font-weight: 600; color: var(--primary-color);">주식회사 드러나다</p>
-                    <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
-                        청산인 안병세 (법인)
+        <div class="modal-wrapper">
+
+            <!-- 1차 공고 -->
+            <div class="modal-content" id="modal-1">
+                <div class="modal-header">
+                    <h3 class="modal-title">해산 및 채권신고공고(1차)</h3>
+                    <button class="modal-close" onclick="closeSingleModal('modal-1')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="margin-bottom: 20px; line-height: 1.8; color: #333;">
+                        본 회사는 2025년 12월 08일 임시주주총회에서 해산을 결의하였으므로 당 회사의 해산에 대하여 이의가 있으신 분이나 채권이 있으신 분은 본 공고 게재 익일로부터 2개월 이내에 그 채권액을 신고하여 주시기 바랍니다. 만약 위 기간내에 신고가 없으면 청산에서 제외됨을 공고합니다.
                     </p>
-                    <p style="margin-bottom: 5px; font-size: 0.75rem; color: #666;">
-                        서울특별시 광진구 능동로13길 75, 2층 에이136호 (화양동)
-                    </p>
+                    <div style="margin-top: 40px; text-align: right;">
+                        <p style="margin-bottom: 10px; font-weight: 600;">2025년 12월 16일</p>
+                        <p style="margin-bottom: 5px; font-weight: 600; color: var(--primary-color);">주식회사 드러나다</p>
+                        <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
+                            청산인 안병세 (법인)
+                        </p>
+                        <p style="margin-bottom: 5px; font-size: 0.75rem; color: #666;">
+                            서울특별시 광진구 능동로13길 75, 2층 에이136호 (화양동)
+                        </p>
+                    </div>
                 </div>
             </div>
+
+            <!-- 2차 공고 -->
+            <div class="modal-content" id="modal-2">
+                <div class="modal-header">
+                    <h3 class="modal-title">해산 및 채권신고공고(2차)</h3>
+                    <button class="modal-close" onclick="closeSingleModal('modal-2')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="margin-bottom: 20px; line-height: 1.8; color: #333;">
+                        본 회사는 2025년 12월 08일 임시주주총회에서 해산을 결의하였으므로 당 회사의 해산에 대하여 이의가 있으신 분이나 채권이 있으신 분은 본 공고 게재 익일로부터 2개월 이내에 그 채권액을 신고하여 주시기 바랍니다. 만약 위 기간내에 신고가 없으면 청산에서 제외됨을 공고합니다.
+                    </p>
+                    <div style="margin-top: 40px; text-align: right;">
+                        <p style="margin-bottom: 10px; font-weight: 600;">2025년 12월 18일</p>
+                        <p style="margin-bottom: 5px; font-weight: 600; color: var(--primary-color);">주식회사 드러나다</p>
+                        <p style="margin-top: 15px; font-size: 0.95rem; color: #666;">
+                            청산인 안병세 (법인)
+                        </p>
+                        <p style="margin-bottom: 5px; font-size: 0.75rem; color: #666;">
+                            서울특별시 광진구 능동로13길 75, 2층 에이136호 (화양동)
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
         function openModal() {
             document.getElementById('popupModal').classList.add('active');
+            // 페이지 로드 시 두 팝업 모두 표시 상태로 초기화
+            document.getElementById('modal-1').style.display = 'flex';
+            document.getElementById('modal-2').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
@@ -358,14 +413,27 @@
             document.body.style.overflow = 'auto';
         }
 
-        // 오버레이 클릭 시 닫기
+        // 개별 팝업 닫기 (X 버튼용)
+        function closeSingleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'none';
+
+            // 두 팝업이 모두 닫혔다면 전체 오버레이도 닫기
+            const modal1 = document.getElementById('modal-1');
+            const modal2 = document.getElementById('modal-2');
+            if (modal1.style.display === 'none' && modal2.style.display === 'none') {
+                closeModal();
+            }
+        }
+
+        // 오버레이 클릭 시 전체 닫기 (모달 콘텐츠 바깥 영역 클릭 시)
         document.getElementById('popupModal').addEventListener('click', function(e) {
-            if (e.target === this) {
+            if (e.target === this || e.target.classList.contains('modal-wrapper')) {
                 closeModal();
             }
         });
 
-        // ESC 키로 닫기
+        // ESC 키로 전체 닫기
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeModal();
